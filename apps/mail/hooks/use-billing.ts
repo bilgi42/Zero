@@ -38,10 +38,12 @@ export const useBilling = () => {
   const { attach, track, openBillingPortal } = useAutumn();
 
   const customerFeatures = useMemo(() => {
-    if (!customer) return DEFAULT_FEATURES;
+    if (!customer || !customer.features || !Array.isArray(customer.features)) return DEFAULT_FEATURES;
 
     const features = customer.features.reduce(
       (acc: Features, feature: Feature) => {
+        if (!feature) return acc;
+        
         const id = feature.feature_id;
         if (id === FEATURE_IDS.CHAT) {
           acc.chatMessages = {
